@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - Modern Habit Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTXHnU3G-RBhFCed9aZK-_coQMPz5FFrA",
+    authDomain: "habitflow-a1a09.firebaseapp.com",
+    projectId: "habitflow-a1a09",
+    storageBucket: "habitflow-a1a09.firebasestorage.app",
+    messagingSenderId: "413487798321",
+    appId: "1:413487798321:web:b6df128eb229debff2dd10",
+    measurementId: "G-7ZPVSD2HWD"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-stream"></i>
+                    HabitFlow
+                </h1>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="add-habit-btn" id="addHabitBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Habit
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-item active" data-tab="dashboard">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </button>
+            <button class="nav-item" data-tab="analytics">
+                <i class="fas fa-chart-line"></i>
+                Analytics
+            </button>
+            <button class="nav-item" data-tab="journal">
+                <i class="fas fa-book"></i>
+                Journal
+            </button>
+            <button class="nav-item" data-tab="achievements">
+                <i class="fas fa-trophy"></i>
+                Achievements
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <!-- Stats Overview -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalStreaks">0</h3>
+                            <p>Active Streaks</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPoints">0</h3>
+                            <p>Total Points</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completionRate">0%</h3>
+                            <p>This Week</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="timeSpent">0m</h3>
+                            <p>Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Habits -->
+                <div class="section">
+                    <h2>Today's Habits</h2>
+                    <div class="habits-container" id="habitsContainer">
+                        <!-- Habits will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Quick Insights -->
+                <div class="section">
+                    <h2>Quick Insights</h2>
+                    <div class="insights-container" id="insightsContainer">
+                        <!-- Insights will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analytics">
+                <div class="section">
+                    <h2>Progress Analytics</h2>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>Habit Heatmap</h2>
+                    <div class="heatmap-container" id="heatmapContainer">
+                        <!-- Heatmap will be generated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journal Tab -->
+            <div class="tab-content" id="journal">
+                <div class="section">
+                    <h2>Reflection Journal</h2>
+                    <div class="journal-entry">
+                        <textarea id="journalText" placeholder="How did your habits go today? Any reflections or insights?"></textarea>
+                        <button class="save-journal-btn" id="saveJournalBtn">
+                            <i class="fas fa-save"></i>
+                            Save Entry
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>Past Entries</h2>
+                    <div class="journal-entries" id="journalEntries">
+                        <!-- Past entries will be displayed here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div class="tab-content" id="achievements">
+                <div class="section">
+                    <h2>Your Level</h2>
+                    <div class="level-card">
+                        <div class="level-info">
+                            <h3 id="userLevel">Beginner</h3>
+                            <div class="level-progress">
+                                <div class="level-bar">
+                                    <div class="level-fill" id="levelFill"></div>
+                                </div>
+                                <span id="levelText">0 / 100 XP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Achievements</h2>
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- Achievements will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add Habit Modal -->
+        <div class="modal" id="addHabitModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add New Habit</h3>
+                    <button class="close-btn" id="closeModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="habitForm">
+                    <div class="form-group">
+                        <label for="habitName">Habit Name</label>
+                        <input type="text" id="habitName" required placeholder="e.g., Drink 8 glasses of water">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="habitType">Type</label>
+                        <select id="habitType">
+                            <option value="boolean">Yes/No</option>
+                            <option value="counter">Counter</option>
+                            <option value="timer">Time-based</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="targetGroup">
+                        <label for="habitTarget">Target</label>
+                        <input type="number" id="habitTarget" placeholder="e.g., 8 glasses or 30 minutes">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="habitPriority">Priority</label>
+                        <select id="habitPriority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="habitColor">Color</label>
+                        <div class="color-picker">
+                            <input type="color" id="habitColor" value="#667eea">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="habitReminder">Reminder Time</label>
+                        <input type="time" id="habitReminder">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-plus"></i>
+                        Create Habit
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Confetti Container -->
+        <div class="confetti-container" id="confettiContainer"></div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
